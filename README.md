@@ -2,7 +2,7 @@
 
 ## Description
 
-This program implements a simple command-line-based line editor. It allows users to create, modify, and navigate through a list of text lines. The editor operates on a file specified via a command-line argument, loading its content, allowing modifications, and saving changes back to the file upon exit.
+This program implements a simple command-line-based line editor, written in C++. It allows users to create, modify, and navigate through a list of text lines. The editor operates on a file specified via a command-line argument, loading its content, allowing modifications, and saving changes back to the file upon exit.
 
 ## Features
 
