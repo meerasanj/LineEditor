@@ -1,24 +1,87 @@
-Client Program Goal: The goal of the client program is to provide a simple line editor that allows users to manipulate a list of text lines through certain commands. For instance, users can insert and delete lines, print the list, move through the list, and exit to save the changes to a file. 
+# Simple Line Editor
 
-Input/Output Files: The client program uses command-line arguments to open up the file stored in argv[1], which is called testfile. When the user enters the command ‘E,’ changes are saved to testfile. 
+## Description
 
-Input/Output: The user can input commands of 'I', 'D', 'L', 'P', 'N', 'E'. The client program outputs the current line number through <line#> as well as prompts and feedback messages. 
+This program implements a simple command-line based line editor. It allows users to create, modify, and navigate through a list of text lines. The editor operates on a file specified via a command-line argument, loading its content, allowing modifications, and saving changes back to the file upon exit.
 
-This program uses the LineList class, which is the implementation file, and the LineNode struct, which is part of the specification file. 
+## Features
 
-The LineList class represents the list of text lines as a doubly-linked list. Its private members include currLine, which is a pointer representing the current line. currLineNum is another private member that stores the current line number and the length variable denotes the total # of lines in the list. The operations (public functions) included are: 
-goToTop(): moves currLine to the top of the list by iterating backwards until it gets to top of list. 
-goToBottom(): moves currLine to the bottom of the list by iterating forwards until it gets to bottom of listinsertLine(): inserts a new line 
-deleteLine(): deletes the current line and leaves currLine 
-printList(): prints list 
-getCurrLine(): retrieves currLine content 
-moveNextLine(): moves currLine to the next line 
-movePrevLine(): moves currLine to the previous line 
-getCurrLineNum(): retrieves currLineNum 
-getLength(): retrieves length of entire list.
+The line editor supports the following commands:
 
-The LineNode struct represents a node in the linked list. It stores pointers to the next and previous lines (next and back) as well as the information in a line (info). The specification file also utilities topMessage and bottomMessage as string constants as well as the string class from C++’s standard library. 
+* **`I` (Insert):** Inserts a new line of text after the current line.
+* **`D` (Delete):** Deletes the current line.
+* **`L` (List):** Prints the entire list of text lines, each preceded by its line number.
+* **`P` (Previous):** Moves the current line pointer to the previous line in the list.
+* **`N` (Next):** Moves the current line pointer to the next line in the list.
+* **`E` (Exit):** Saves all changes made during the session to the input file and terminates the program.
 
-The client program, editor.cpp, first calls a method to read from the command line argument to obtain the filename. Then, the program opens the file for input and reads its content line by line. Each line is inserted into the LineList object. Then, the printList method and goToBottom method are called to print the initial list and set the current line to the bottom. Then, users can enter commands from 'I', 'D', 'L', 'P', 'N', 'E' through switch statements to respectively insert a new line, delete the current line, print the entire list, move to the previous line, move to the next line, or save changes to the file and exit (by calling the finishUp method for case 'E'). 
+The editor also displays the current line number as a prompt (`<line#>`) and provides feedback messages for various operations.
 
+## File Structure
 
+The project consists of the following key components:
+
+* **`editor.cpp` (Client Program):** This is the main program file that handles user interaction, command parsing, and overall program flow. It utilizes the `LineList` class to manage the text lines.
+* **`LineList.h` (Specification File):** This header file defines the `LineNode` struct and the interface for the `LineList` class.
+    * **`LineNode` struct:** Represents a node within the doubly-linked list. Each node stores:
+        * `info`: A string containing the text of the line.
+        * `next`: A pointer to the next `LineNode` in the list.
+        * `back`: A pointer to the previous `LineNode` in the list.
+    * It also defines string constants `topMessage` and `bottomMessage` and includes `<string>`.
+* **`LineList.cpp` (Implementation File):** This file contains the implementation of the `LineList` class methods.
+
+## Core Data Structure: `LineList` Class
+
+The `LineList` class is responsible for managing the collection of text lines using a doubly-linked list.
+
+### Private Members:
+
+* **`currLine` (`LineNode*`):** A pointer to the `LineNode` representing the current line in the list.
+* **`currLineNum` (`int`):** An integer storing the line number of the `currLine`.
+* **`length` (`int`):** An integer representing the total number of lines in the list.
+
+### Public Member Functions (Operations):
+
+* **`goToTop()`:** Moves `currLine` to the first line of the list.
+* **`goToBottom()`:** Moves `currLine` to the last line of the list.
+* **`insertLine(const std::string& newLine)`:** Inserts a new line containing `newLine` after the current line.
+* **`deleteLine()`:** Deletes the line pointed to by `currLine`. The `currLine` is then typically updated to the next line, or the previous if the deleted line was the last.
+* **`printList()`:** Displays all lines in the list to the console, along with their line numbers.
+* **`getCurrLine() const` (`std::string`):** Returns the text content of the `currLine`.
+* **`moveNextLine()`:** Advances `currLine` to the next line in the list.
+* **`movePrevLine()`:** Moves `currLine` to the previous line in the list.
+* **`getCurrLineNum() const` (`int`):** Returns the current line number (`currLineNum`).
+* **`getLength() const` (`int`):** Returns the total number of lines in the list (`length`).
+
+## Input/Output
+
+* **Input File:** The program expects a filename as a command-line argument (e.g., `argv[1]`). This file (`testfile` in the original description) is opened, and its contents are read line by line into the `LineList`.
+* **User Input:** Users interact with the editor by typing single-character commands followed by Enter. If a command requires further input (e.g., 'I' for inserting a line), the program will prompt for it.
+* **Output:**
+    * The editor displays the current line number as a prompt (e.g., ``).
+    * Feedback messages are provided for actions (e.g., upon successful insertion or deletion).
+    * The `L` command prints the entire list.
+* **Output File:** When the 'E' command is issued, all modifications are written back to the original input file.
+
+## Program Flow
+
+1.  **Initialization:** The client program (`editor.cpp`) reads the filename from the command-line arguments.
+2.  **File Loading:** The specified file is opened, and its content is read line by line. Each line is inserted into a `LineList` object.
+3.  **Initial State:** After loading, the `printList()` method is called to display the initial content, and `goToBottom()` sets the current line to the last line of the file.
+4.  **Command Loop:** The program enters a loop, prompting the user for commands. A `switch` statement handles the different commands ('I', 'D', 'L', 'P', 'N', 'E').
+5.  **Saving and Exiting:** The 'E' command triggers the `finishUp()` method (or equivalent logic), which writes the current state of the `LineList` back to the input file and then terminates the program.Client Program Goal: The goal of the client program is to provide a simple line editor that allows users to manipulate a list of text lines through certain commands. For instance, users can insert and delete lines, print the list, move through the list, and exit to save the changes to a file. 
+
+## How to Compile and Run
+
+### Prerequisites
+
+* A C++ compiler that supports C++11 or later (e.g., GCC g++, Clang).
+* Standard C++ libraries.
+
+### Compilation
+
+To compile the program, you will typically compile `editor.cpp` and `LineList.cpp` and link them together. 
+
+```bash
+g++ editor.cpp LineList.cpp -o line_editor -std=c++11
+./editor testfile
