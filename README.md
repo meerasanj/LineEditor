@@ -84,4 +84,4 @@ To compile the program, you will typically compile `editor.cpp` and `LineList.cp
 
 ```bash
 g++ editor.cpp LineList.cpp -o line_editor -std=c++11
-./editor testfile
+./a.out testfile
